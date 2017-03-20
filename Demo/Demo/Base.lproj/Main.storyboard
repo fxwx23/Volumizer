@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="xyJ-xN-FPQ">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Volumizer-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lie-k4-1Hj">
+                                <rect key="frame" x="87.5" y="124" width="200" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="q4T-gW-Tmm"/>
+                                    <constraint firstAttribute="width" constant="200" id="zHp-gv-ORc"/>
+                                </constraints>
+                                <state key="normal" title="Show an alert"/>
+                                <connections>
+                                    <action selector="showAnAlertButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QZO-bp-jEX"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Show a keyboard" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dQF-AR-mzB">
+                                <rect key="frame" x="87.5" y="180" width="200" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="6LD-Pu-F3I"/>
+                                    <constraint firstAttribute="height" constant="40" id="FFX-Ld-Rp2"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="dQF-AR-mzB" firstAttribute="top" secondItem="lie-k4-1Hj" secondAttribute="bottom" constant="16" id="232-Z5-nxC"/>
+                            <constraint firstItem="dQF-AR-mzB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="CTf-Bh-Nei"/>
+                            <constraint firstItem="lie-k4-1Hj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DnH-kk-dUa"/>
+                            <constraint firstItem="lie-k4-1Hj" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="60" id="WK6-Ww-4Oe"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Volumizer" id="6rH-a4-Zxg"/>
+                    <connections>
+                        <outlet property="textField" destination="dQF-AR-mzB" id="aLn-Bu-4rR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="256.80000000000001" y="-597.75112443778119"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="pbE-0f-nH4">
+            <objects>
+                <navigationController id="xyJ-xN-FPQ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="EJv-Bo-o7E">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="g2c-ez-69h"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Za1-Vd-yGz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-506" y="-596"/>
+        </scene>
+    </scenes>
+</document>
