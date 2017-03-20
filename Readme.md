@@ -66,7 +66,7 @@ volumizer.update(options: otherOptions)
 If you want to release `volumizer` 's window, please call `resign()`. Once you released, the system volume popup will be shown again.
 
 ```swift
-volumizer.resgin()
+volumizer.resign()
 ```
 
 ## License
