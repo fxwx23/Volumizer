@@ -1,5 +1,9 @@
 # Volumizer 
- [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md#pull-requests) [![Language](https://img.shields.io/badge/language-swift-orange.svg?style=flat)](https://developer.apple.com/swift)
+[![Platform](https://img.shields.io/cocoapods/p/Volumizer.svg?style=flat)](https://github.com/SnapKit/SnapKit)
+[![Language](https://img.shields.io/badge/language-swift-orange.svg?style=flat)](https://developer.apple.com/swift)
+[![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Volumizer.svg)](https://cocoapods.org/pods/SnapKit)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md#pull-requests)
 
 `Volumizer` replaces the system volume popup with a simple progress bar.
 
