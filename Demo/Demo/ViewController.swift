@@ -13,7 +13,7 @@ class ViewController: UIViewController{
     @IBOutlet weak var textField: UITextField!
     var imagePicler: UIImagePickerController?
     var volumizer: Volumizer?
-    let defaultOptions: [VolumizerAppearanceOption] = [ .oberlayIsTranslucent(true),
+    let defaultOptions: [VolumizerAppearanceOption] = [ .overlayIsTranslucent(true),
                                                         .overlayBackgroundBlurEffectStyle( .extraLight),
                                                         .overlayBackgroundColor( .white),
                                                         .sliderProgressTintColor( .black)]

@@ -24,7 +24,7 @@ public enum VolumizerError: Error {
  VolumizerAppearanceOption
  */
 public enum VolumizerAppearanceOption {
-    case oberlayIsTranslucent(Bool)
+    case overlayIsTranslucent(Bool)
     case overlayBackgroundBlurEffectStyle(UIBlurEffectStyle)
     case overlayBackgroundColor(UIColor)
     case sliderProgressTintColor(UIColor)
@@ -109,7 +109,7 @@ open class Volumizer: UIView {
     open func update(options: [VolumizerAppearanceOption]) {
         options.forEach {
             switch $0 {
-            case .oberlayIsTranslucent(let isTranslucent):
+            case .overlayIsTranslucent(let isTranslucent):
                 if isTranslucent {
                     overlayBlur.isHidden = false
                 }
