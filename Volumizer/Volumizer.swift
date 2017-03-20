@@ -153,19 +153,20 @@ open class Volumizer: UIView {
         
         /// overlay's `backgroundColor` is white by default.
         overlay.backgroundColor = .white
+        addSubview(overlay)
+        
         overlayBlur = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
         overlayBlur.frame = overlay.bounds
-        addSubview(overlay)
         overlay.addSubview(overlayBlur)
         
         /// slider's `thumbTintColor` is black by default.
         slider.backgroundColor = .white
         slider.progressTintColor = .black
         slider.trackTintColor = UIColor.lightGray.withAlphaComponent(0.5)
+        addSubview(slider)
         
         update(options: options)
-        addSubview(slider)
-    
+        
         /// add observers.
         session.addObserver(self, forKeyPath: AVAudioSessionOutputVolumeKey, options: .new, context: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted(_:)), name: .AVAudioSessionInterruption, object: nil)
