@@ -5,14 +5,14 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md#pull-requests)
 
-`Volumizer` replaces the system volume popup with a simple progress bar.
+**Volumizer** replaces the system volume popup with a simple progress bar.
 
 ### Features
 
-- Swift3
-- Hide the system volume HUD typically displayed on volume button presses
-- Show a simple progress bar like Instagram's iOS app does
-- Well easy to customize appearance
+- Swift3.
+- Hide the system volume HUD typically displayed on volume button presses.
+- Show a simple progress bar like Instagram's iOS app does.
+- Well easy to customize appearance.
 - Only support `portrait` mode.
 
 ## Installation
@@ -27,10 +27,10 @@ use_frameworks!
 pod 'Volumizer'
 ```
 ##### Carthage
-Add the following to your `Cartfile` and follow [these instructions](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application)
+Add the following to your `Cartfile` and follow [these instructions](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ```
-github "fxwx23/Voumizer"
+github "fxwx23/Volumizer"
 ```
 
 ##### Manually
@@ -72,6 +72,12 @@ If you want to release `volumizer` 's window, please call `resign()`. Once you r
 ```swift
 volumizer.resign()
 ```
+
+## WIP
+- [ ] support `landscape` mode.
+- [ ] support [SPM]().
+- [ ] manage window level to be below `UIWindowLevelAlert` .
+- [ ] `Objective-C` compatible. 
 
 ## License
 This project is under the MIT license.
