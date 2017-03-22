@@ -49,7 +49,7 @@ You can customize the bar's appearance with `VolumizerAppearanceOption`.
 ```swift 
 /**
 public enum VolumizerAppearanceOption {
-   case oberlayIsTranslucent(Bool) default is `true`.
+   case overlayIsTranslucent(Bool) default is `true`.
    case overlayBackgroundBlurEffectStyle(UIBlurEffectStyle) default is `.extraLight`.
    case overlayBackgroundColor(UIColor) default is `.white`.
    case sliderProgressTintColor(UIColor) default is `.black`.
@@ -57,7 +57,7 @@ public enum VolumizerAppearanceOption {
 }
 */
 
-let options: [VolumizerAppearanceOption] = [ .oberlayIsTranslucent(true),
+let options: [VolumizerAppearanceOption] = [ .overlayIsTranslucent(true),
                                              .overlayBackgroundBlurEffect( .extraLight),
                                              .overlayBackgroundColor( .white),
                                              .sliderProgressTintColor( .black)]
