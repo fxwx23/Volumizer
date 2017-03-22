@@ -81,7 +81,6 @@ open class Volumizer: UIView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        base?.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 20.0)
         overlay.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 20.0)
         
         let side: CGFloat = 8.0
@@ -184,16 +183,16 @@ open class Volumizer: UIView {
         } catch {
             NSLog("unable to change system volume level.")
         }
-        
+       
         UIView.animateKeyframes(withDuration: animated ? 2 : 0, delay: 0, options: .beginFromCurrentState, animations: { () -> Void in
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1, animations: {
                 self.alpha = 1
-                self.transform = CGAffineTransform.identity
+                self.base?.transform = CGAffineTransform.identity
             })
             
             UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: 0.1, animations: { () -> Void in
-                self.transform = CGAffineTransform(translationX: 0, y: -self.frame.height)
                 self.alpha = 0.0001
+                self.base?.transform = CGAffineTransform(translationX: 0, y: -self.frame.height)
             })
         }) { _ in }
     }
@@ -238,6 +237,7 @@ open class Volumizer: UIView {
     @objc private func orientationDidChange(_ notification: Notification) {
         // TODO: [wip] support landscape mode.
         // NSLog("orientation changed.")
+        /**
         let currentOrientation = UIDevice.current.orientation
         switch currentOrientation {
         case .landscapeLeft:
@@ -249,6 +249,7 @@ open class Volumizer: UIView {
         default:
             base?.transform = CGAffineTransform(rotationAngle: CGFloat(0.0 * M_PI / 180.0))
         }
+        */
     }
     
     // MARK: KVO
