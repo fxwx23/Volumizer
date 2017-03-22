@@ -95,7 +95,7 @@ open class Volumizer: UIView {
     
     // MARK: Convenience
     
-    open class func configure(_ options: [VolumizerAppearanceOption]) -> Volumizer {
+    open class func configure(_ options: [VolumizerAppearanceOption] = []) -> Volumizer {
         let base = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.height, height: 20.0))
         base.windowLevel = UIWindowLevelStatusBar + 1.0
         
