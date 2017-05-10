@@ -8,9 +8,7 @@
 
 **Volumizer** replaces the system volume popup with a simple progress bar.
 
-||
---- | --- | ---
-![screenshot](https://github.com/fxwx23/Volumizer/raw/master/screenshot.png)||  
+![screenshot](https://github.com/fxwx23/Volumizer/raw/master/screenshot.png)
 
 ### Features
 
