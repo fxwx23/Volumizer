@@ -11,6 +11,9 @@ import UIKit
 class ViewController: UIViewController{
 
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var configureButton: UIButton!
+    @IBOutlet weak var resultLabel: UILabel!
+    
     var imagePicler: UIImagePickerController?
     var volumizer: Volumizer?
     let defaultOptions: [VolumizerAppearanceOption] = [ .overlayIsTranslucent(true),
@@ -27,15 +30,8 @@ class ViewController: UIViewController{
         let doneButton = UIBarButtonItem(title: "close", style: .done, target: self, action: #selector(resignKeyboard(sender:)))
         toolbar.setItems([space, doneButton], animated: true)
         textField?.inputAccessoryView = toolbar
-      
-        volumizer = Volumizer.configure(defaultOptions)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        guard let volumizer = volumizer else { return }
-        volumizer.update(options: defaultOptions)
-    }
-    
+   
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -48,13 +44,32 @@ class ViewController: UIViewController{
     }
     
     // MARK: IB Actions
-
-    @IBAction func showAnAlertButtonTapped(_ sender: Any) {
+    
+    @IBAction func showAnAlertButtonTapped(_ sender: UIButton) {
         let alert = UIAlertController(title: "Title", message: "Message", preferredStyle: .alert)
         let closeAction = UIAlertAction(title: "Close", style: .default, handler: nil)
         alert.addAction(closeAction)
         
         present(alert, animated: true, completion: nil)
     }
+    
+    
+    @IBAction func callResignButtonTapped(_ sender: UIButton) {
+        if let volumizer = volumizer {
+            defer { self.volumizer = nil }
+            
+            volumizer.resign()
+            configureButton.setTitle("call configure()", for: .normal)
+            configureButton.setTitleColor( .black, for: .normal)
+            resultLabel.text = "Before"
+        }
+        else {
+            volumizer = Volumizer.configure(defaultOptions)
+            configureButton.setTitle("call resign()", for: .normal)
+            configureButton.setTitleColor( .red, for: .normal)
+            resultLabel.text = "After"
+        }
+    }
+    
 }
 
