@@ -119,6 +119,7 @@ open class Volumizer: UIView {
                 overlayBlur.effect = UIBlurEffect(style: style)
             case .overlayBackgroundColor(let color):
                 overlay.backgroundColor = color
+                backgroundColor = color
             case .sliderProgressTintColor(let color):
                 slider.progressTintColor = color
             case .sliderTrackTintColor(let color):
@@ -142,8 +143,6 @@ open class Volumizer: UIView {
         }
         
         update(volume: session.outputVolume, animated: false)
-        
-        backgroundColor = .white
         
         volumeView.setVolumeThumbImage(UIImage(), for: UIControlState())
         volumeView.isUserInteractionEnabled = false
