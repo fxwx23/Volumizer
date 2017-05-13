@@ -105,7 +105,7 @@ open class Volumizer: UIView {
         return instance
     }
     
-    open func update(options: [VolumizerAppearanceOption]) {
+    open func change(options: [VolumizerAppearanceOption]) {
         options.forEach {
             switch $0 {
             case .overlayIsTranslucent(let isTranslucent):
@@ -161,7 +161,7 @@ open class Volumizer: UIView {
         slider.trackTintColor = UIColor.lightGray.withAlphaComponent(0.5)
         addSubview(slider)
         
-        update(options: options)
+        change(options: options)
         update(volume: session.outputVolume, animated: false)
         
         /// add observers.
