@@ -65,11 +65,11 @@ open class Volumizer: UIView {
     }
     
     required public init() {
-        fatalError("Please use the convenience initializer `init(options:_, base:_)` instead")
+        fatalError("Please use the convenience initializer `init(options:_, base:_)` instead.")
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented.")
     }
     
     deinit {
@@ -136,13 +136,11 @@ open class Volumizer: UIView {
     // MARK: Private
     
     private func setupSession(_ options: [VolumizerAppearanceOption]) {
-        do {
-            try session.setActive(true)
-        } catch {
-            NSLog("Unable to initialize AVAudioSession")
-        }
+        do { try session.setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers) }
+        catch { NSLog("Unable to set audio session category.") }
         
-        update(volume: session.outputVolume, animated: false)
+        do { try session.setActive(true) }
+        catch  { NSLog("Unable to initialize AVAudioSession.") }
         
         volumeView.setVolumeThumbImage(UIImage(), for: UIControlState())
         volumeView.isUserInteractionEnabled = false
@@ -164,10 +162,12 @@ open class Volumizer: UIView {
         addSubview(slider)
         
         update(options: options)
+        update(volume: session.outputVolume, animated: false)
         
         /// add observers.
         session.addObserver(self, forKeyPath: AVAudioSessionOutputVolumeKey, options: .new, context: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted(_:)), name: .AVAudioSessionInterruption, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChanged(_:)), name: .AVAudioSessionRouteChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: .UIDeviceOrientationDidChange, object: nil)
@@ -177,11 +177,8 @@ open class Volumizer: UIView {
         volume = value
         slider.setProgress(volume, animated: true)
         
-        do {
-            try setSystem(volume: value)
-        } catch {
-            NSLog("unable to change system volume level.")
-        }
+        do { try setSystem(volume: value) }
+        catch { NSLog("unable to change system volume level.") }
        
         UIView.animateKeyframes(withDuration: animated ? 2 : 0, delay: 0, options: .beginFromCurrentState, animations: { () -> Void in
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1, animations: {
@@ -207,22 +204,44 @@ open class Volumizer: UIView {
     // MARK: Notification
     
     @objc private func audioSessionInterrupted(_ notification: Notification) {
-        guard let interuptionInfo = notification.userInfo,
+        guard
+            let interuptionInfo = notification.userInfo,
             let rawValue = interuptionInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let interuptionType = AVAudioSessionInterruptionType(rawValue: rawValue) else {
+            let interuptionType = AVAudioSessionInterruptionType(rawValue: rawValue)
+        else {
             return
         }
         
         switch interuptionType {
         case .began:
-            // NSLog("Audio Session Interruption case started.")
+            NSLog("Audio Session Interruption: began.")
             break
         case .ended:
-            do {
-                try session.setActive(true)
-            } catch {
-                NSLog("Unable to initialize AVAudioSession")
-            }
+            NSLog("Audio Session Interruption: ended.")
+            do { try session.setActive(true) }
+            catch { NSLog("Unable to initialize AVAudioSession.") }
+        }
+    }
+    
+    @objc private func audioSessionRouteChanged(_ notification: Notification) {
+        guard
+            let interuptionInfo = notification.userInfo,
+            let rawValue = interuptionInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+            let reason = AVAudioSessionRouteChangeReason(rawValue: rawValue)
+        else {
+                return
+        }
+        
+        switch reason {
+        case .newDeviceAvailable:
+            NSLog("Audio seesion route changed: new device available.")
+            break
+        case .oldDeviceUnavailable:
+            NSLog("Audio seesion route changed: old device unavailable.")
+            break
+        default:
+            NSLog("Audio seesion route changed: \(reason.rawValue)")
+            break
         }
     }
     
@@ -255,7 +274,6 @@ open class Volumizer: UIView {
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let change = change, let value = change[.newKey] as? Float , keyPath == AVAudioSessionOutputVolumeKey else { return }
-        
         update(volume: value, animated: UIDeviceOrientationIsPortrait(UIDevice.current.orientation))
     }
 }
