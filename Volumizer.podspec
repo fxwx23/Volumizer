@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.homepage = 'https://github.com/fxwx23/Volumizer'
   s.author   = { 'Fumitaka Watanabe' => 'fxwx23@gmail.com' }
   s.social_media_url   = "https://twitter.com/fxwx23"
-  s.source   = { :git => 'https://github.com/fxwx23/Volumizer.git', :tag => s.version }
+  s.source   = { :git => 'https://github.com/fxwx23/Volumizer.git', :tag => "v#{s.version}" }
   s.description  = <<-DESC
                      -Volumizer replaces the system volume popup with a simple progress bar.
                      -Features
