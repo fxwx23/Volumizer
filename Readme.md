@@ -1,8 +1,8 @@
-# Volumizer 
+# Volumizer
 [![Platform](https://img.shields.io/cocoapods/p/Volumizer.svg?style=flat)](https://github.com/fxwx23/Volumizer)
 [![Language](https://img.shields.io/badge/language-swift-orange.svg?style=flat)](https://developer.apple.com/swift)
 [![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Volumizer.svg)](https://cocoapods.org/pods/Volumizer)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) 
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/fxwx23/Volumizer/master/license)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md#pull-requests)
 
@@ -23,11 +23,11 @@ Before | After
 ## Installation
 
 ##### CocoaPods
-[CocoaPods](https://cocoapods.org) 0.36 adds supports for Swift and embedded frameworks. To integrate Volumizer into your project add the following to your `Podfile`: 
+[CocoaPods](https://cocoapods.org) 0.36 adds supports for Swift and embedded frameworks. To integrate Volumizer into your project add the following to your `Podfile`:
 
 ```ruby
 platform :ios, '8.0'
-use_frameworks! 
+use_frameworks!
 
 pod 'Volumizer'
 ```
@@ -47,11 +47,11 @@ Use of `Volumizer` is a simple way with one line. Just call `configure()` after 
 
 ```swift
 Volumizer.configure()
-``` 
+```
 
 You can customize the bar's appearance with `VolumizerAppearanceOption`.
 
-```swift 
+```swift
 /**
 public enum VolumizerAppearanceOption {
    case overlayIsTranslucent(Bool) default is `true`.
@@ -66,11 +66,11 @@ let options: [VolumizerAppearanceOption] = [ .overlayIsTranslucent(true),
                                              .overlayBackgroundBlurEffect( .extraLight),
                                              .overlayBackgroundColor( .white),
                                              .sliderProgressTintColor( .black)]
-                                             
+
 let volumizer = Volumizer.configure(options)
 
 /// To change options based on view's current appearance, call `update(options:_)` .
-volumizer.update(options: otherOptions)
+volumizer.change(options: otherOptions)
 ```
 If you want to release `volumizer` 's window, please call `resign()`. Once you released, the system volume popup will be shown again.
 
@@ -82,7 +82,7 @@ volumizer.resign()
 - [ ] support `landscape` mode.
 - [ ] support [SPM]().
 - [ ] manage window level to be below `UIWindowLevelAlert` .
-- [ ] `Objective-C` compatible. 
+- [ ] `Objective-C` compatible.
 
 ## License
 This project is under the MIT license.
