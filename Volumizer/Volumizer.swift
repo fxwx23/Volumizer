@@ -168,6 +168,7 @@ open class Volumizer: UIView {
         /// add observers.
         session.addObserver(self, forKeyPath: AVAudioSessionOutputVolumeKey, options: .new, context: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted(_:)), name: .AVAudioSessionInterruption, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChanged(_:)), name: .AVAudioSessionRouteChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationDidBecomeActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: .UIDeviceOrientationDidChange, object: nil)
@@ -207,22 +208,46 @@ open class Volumizer: UIView {
     // MARK: Notification
     
     @objc private func audioSessionInterrupted(_ notification: Notification) {
-        guard let interuptionInfo = notification.userInfo,
+        guard
+            let interuptionInfo = notification.userInfo,
             let rawValue = interuptionInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let interuptionType = AVAudioSessionInterruptionType(rawValue: rawValue) else {
+            let interuptionType = AVAudioSessionInterruptionType(rawValue: rawValue)
+        else {
             return
         }
         
         switch interuptionType {
         case .began:
-            // NSLog("Audio Session Interruption case started.")
+            NSLog("Audio Session Interruption: began.")
             break
         case .ended:
-            do {
-                try session.setActive(true)
-            } catch {
-                NSLog("Unable to initialize AVAudioSession")
-            }
+            NSLog("Audio Session Interruption: ended.")
+        }
+        
+        // bring back the observer to volumizer when interrupted.
+        
+        session.addObserver(self, forKeyPath: AVAudioSessionOutputVolumeKey, options: .new, context: nil)
+    }
+    
+    @objc private func audioSessionRouteChanged(_ notification: Notification) {
+        guard
+            let interuptionInfo = notification.userInfo,
+            let rawValue = interuptionInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+            let reason = AVAudioSessionRouteChangeReason(rawValue: rawValue)
+        else {
+                return
+        }
+        
+        switch reason {
+        case .newDeviceAvailable:
+            NSLog("Audio seesion route changed: new device available.")
+            break
+        case .oldDeviceUnavailable:
+            NSLog("Audio seesion route changed: old device unavailable.")
+            break
+        default:
+            NSLog("Audio seesion route changed: \(reason.rawValue)")
+            break
         }
     }
     
