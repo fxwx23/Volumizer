@@ -53,7 +53,9 @@ open class Volumizer: UIView {
     
     public convenience init(options: [VolumizerAppearanceOption], base: UIWindow) {
         /// default width 
-        self.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.height, height: 20.0))
+        self.init(frame: CGRect(x: 0, y: 0,
+                                width: UIScreen.main.bounds.height,
+                                height: UIApplication.shared.statusBarFrame.height))
         self.base = base
         isAppActive = true
         setupSession(options)
@@ -81,7 +83,9 @@ open class Volumizer: UIView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        overlay.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 20.0)
+        overlay.frame = CGRect(x: 0, y: 0,
+                               width: UIScreen.main.bounds.width,
+                               height: UIApplication.shared.statusBarFrame.height)
         
         let side: CGFloat = 8.0
         slider.frame = CGRect(x: side,
