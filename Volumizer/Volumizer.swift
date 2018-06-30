@@ -142,10 +142,10 @@ open class Volumizer: UIView {
     
     private func setupSession(_ options: [VolumizerAppearanceOption]) {
         do { try session.setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers) }
-        catch { NSLog("Unable to set audio session category.") }
+        catch { print("Unable to set audio session category.") }
         
         do { try session.setActive(true) }
-        catch  { NSLog("Unable to initialize AVAudioSession.") }
+        catch  { print("Unable to initialize AVAudioSession.") }
         
         volumeView.setVolumeThumbImage(UIImage(), for: UIControlState())
         volumeView.isUserInteractionEnabled = false
@@ -183,7 +183,7 @@ open class Volumizer: UIView {
         slider.setProgress(volume, animated: true)
         
         do { try setSystem(volume: value) }
-        catch { NSLog("unable to change system volume level.") }
+        catch { print("unable to change system volume level.") }
        
         UIView.animateKeyframes(withDuration: animated ? 2 : 0, delay: 0, options: .beginFromCurrentState, animations: { () -> Void in
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1, animations: {
@@ -219,12 +219,12 @@ open class Volumizer: UIView {
         
         switch interuptionType {
         case .began:
-            NSLog("Audio Session Interruption: began.")
+            print("Audio Session Interruption: began.")
             break
         case .ended:
-            NSLog("Audio Session Interruption: ended.")
+            print("Audio Session Interruption: ended.")
             do { try session.setActive(true) }
-            catch { NSLog("Unable to initialize AVAudioSession.") }
+            catch { print("Unable to initialize AVAudioSession.") }
         }
     }
     
@@ -239,13 +239,13 @@ open class Volumizer: UIView {
         
         switch reason {
         case .newDeviceAvailable:
-            NSLog("Audio seesion route changed: new device available.")
+            print("Audio seesion route changed: new device available.")
             break
         case .oldDeviceUnavailable:
-            NSLog("Audio seesion route changed: old device unavailable.")
+            print("Audio seesion route changed: old device unavailable.")
             break
         default:
-            NSLog("Audio seesion route changed: \(reason.rawValue)")
+            print("Audio seesion route changed: \(reason.rawValue)")
             break
         }
     }
@@ -259,7 +259,7 @@ open class Volumizer: UIView {
     
     @objc private func orientationDidChange(_ notification: Notification) {
         // TODO: [wip] support landscape mode.
-        // NSLog("orientation changed.")
+        // print("orientation changed.")
         /**
         let currentOrientation = UIDevice.current.orientation
         switch currentOrientation {
