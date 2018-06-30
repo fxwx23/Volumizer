@@ -195,7 +195,7 @@ open class Volumizer: UIView {
     }
     
     private func setSystem(volume value: Float) throws {
-        guard let systemSlider = volumeView.subviews.flatMap({ $0 as? UISlider }).first else {
+        guard let systemSlider = volumeView.subviews.compactMap({ $0 as? UISlider }).first else {
             throw VolumizerError.disableToChangeVolumeLevel
         }
         
