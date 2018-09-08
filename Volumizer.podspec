@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'Volumizer'
-  s.version  = '1.0.5'
+  s.version  = '1.1'
   s.platform = :ios, "8.0"
   s.license  = { :type => "MIT", :file => "license" }
   s.summary  = 'Volumizer replaces the system volume popup with a simple progress bar.'
