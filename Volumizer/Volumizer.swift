@@ -83,24 +83,26 @@ open class Volumizer: UIView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        overlay.frame = CGRect(x: 0, y: 0,
-                               width: UIScreen.main.bounds.width,
-                               height: UIApplication.shared.statusBarFrame.height)
-        
-        let side: CGFloat = 8.0
-        slider.frame = CGRect(x: side,
-                              y: (overlay.frame.height - slider.frame.height) / 2,
-                              width: overlay.frame.width - (side * 2),
-                              height: slider.frame.height)
-        
+        let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height
+        overlay.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: statusBarHeight)
         overlayBlur.frame = overlay.bounds
+        
+        // Progress view frame is defined based on the device model.
+        // Slider view style would be like Instagram's way (of course iPhoneX too).
+        let margin: CGFloat = isPhoneX ? SafeAreaLayout.currentMargin : 0.0
+        let padding: CGFloat = isPhoneX ? (margin + 8.0) : 8.0
+        let top: CGFloat = (overlay.frame.height - slider.frame.height) / 2
+        let width: CGFloat = isPhoneX ? (margin * 2 + statusBarHeight) - padding : overlay.frame.width - (padding * 2)
+        slider.frame = CGRect(x: padding, y: top, width: width, height: slider.frame.height)
+        slider.layer.cornerRadius = slider.bounds.height / 2
+        slider.clipsToBounds = true
     }
     
     // MARK: Convenience
     
     @discardableResult
     open class func configure(_ options: [VolumizerAppearanceOption] = []) -> Volumizer {
-        let base = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.height, height: 20.0))
+        let base = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.height, height: UIApplication.shared.statusBarFrame.height))
         base.windowLevel = UIWindowLevelStatusBar + 1.0
         
         let instance = Volumizer(options: options, base: base)
@@ -185,15 +187,15 @@ open class Volumizer: UIView {
         do { try setSystem(volume: value) }
         catch { print("unable to change system volume level.") }
        
-        UIView.animateKeyframes(withDuration: animated ? 2 : 0, delay: 0, options: .beginFromCurrentState, animations: { () -> Void in
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.1, animations: {
-                self.alpha = 1
-                self.base?.transform = CGAffineTransform.identity
+        let animationDuration = isPhoneX ? 1.0 : 2.0
+        let showRelativeDuration = isPhoneX ? 0.05 : 0.1
+        let hideRelativeDuration = isPhoneX ? 0.3 : 0.1
+        UIView.animateKeyframes(withDuration: animated ? animationDuration : 0, delay: 0, options: .beginFromCurrentState, animations: { () -> Void in
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: showRelativeDuration, animations: {
+                self.animateProgressView(showing: true)
             })
-            
-            UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: 0.1, animations: { () -> Void in
-                self.alpha = 0.0001
-                self.base?.transform = CGAffineTransform(translationX: 0, y: -self.frame.height)
+            UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: hideRelativeDuration, animations: { () -> Void in
+                self.animateProgressView(showing: false)
             })
         }) { _ in }
     }
@@ -204,6 +206,18 @@ open class Volumizer: UIView {
         }
         
         systemSlider.value = max(0, min(1, value))
+    }
+    
+    private func animateProgressView(showing: Bool) {
+        if showing {
+            self.alpha = 1
+            self.base?.transform = CGAffineTransform.identity
+        } else {
+            self.alpha = 0.0001
+            self.base?.transform = isPhoneX ?
+                CGAffineTransform.identity :
+                CGAffineTransform(translationX: 0, y: -self.frame.height)
+        }
     }
     
     // MARK: Notification
@@ -280,5 +294,36 @@ open class Volumizer: UIView {
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let change = change, let value = change[.newKey] as? Float , keyPath == AVAudioSessionOutputVolumeKey else { return }
         update(volume: value, animated: UIDeviceOrientationIsPortrait(UIDevice.current.orientation))
+    }
+}
+
+private let iPhoneXScreenMaxLength: CGFloat = 812.0
+private var isPhoneX: Bool {
+    let screenMaxLength = CGFloat(max(UIScreen.main.bounds.width, UIScreen.main.bounds.height))
+    return UIDevice.current.userInterfaceIdiom == .phone && screenMaxLength == iPhoneXScreenMaxLength
+}
+
+private struct SafeAreaLayout {
+    private static let portraitSafeArea: CGSize = CGSize(width: 375.0, height: 734.0)
+    private static let portraitMargin: CGFloat = 16.0
+    private static let landscapeSafeArea: CGSize = CGSize(width: 724.0, height: 375.0)
+    private static let landscapeMargin: CGFloat = 20.0
+    
+    static var currentSafeArea: CGSize {
+        switch UIApplication.shared.statusBarOrientation {
+        case .portrait, .portraitUpsideDown, .unknown:
+            return portraitSafeArea
+        default:
+            return landscapeSafeArea
+        }
+    }
+    
+    static var currentMargin: CGFloat {
+        switch UIApplication.shared.statusBarOrientation {
+        case .portrait, .portraitUpsideDown, .unknown:
+            return portraitMargin
+        default:
+            return landscapeMargin
+        }
     }
 }
