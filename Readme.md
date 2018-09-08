@@ -8,32 +8,29 @@
 
 **Volumizer** replaces the system volume popup with a simple progress bar.
 
-Before | After
---- | ---
-![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/before.png) | ![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/after.png)
+Before | After | After (iPhoneX)
+--- | --- | ---
+![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/before.png) | ![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/after.png) | ![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/after_iphonex.png) 
 
 ### Features
 
-- Swift3.
-- Hide the system volume HUD typically displayed on volume button presses.
-- Show a simple progress bar like Instagram's iOS app does.
-- Well easy to customize appearance.
-- Only support `portrait` mode.
+- Swift 4
+- Hide the system volume HUD typically displayed on volume button presses
+- Show a simple progress bar like Instagram's iOS app does
+- Support iPhoneX
+- Well easy to customize appearance
+- Only support `portrait` mode
 
 ## Installation
 
-##### CocoaPods
-[CocoaPods](https://cocoapods.org) 0.36 adds supports for Swift and embedded frameworks. To integrate Volumizer into your project add the following to your `Podfile`:
-
+##### [CocoaPods](https://cocoapods.org) 
 ```ruby
 platform :ios, '8.0'
 use_frameworks!
 
 pod 'Volumizer'
 ```
-##### Carthage
-Add the following to your `Cartfile` and follow [these instructions](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
-
+##### [Carthage](https://github.com/Carthage/Carthage)
 ```
 github "fxwx23/Volumizer"
 ```
