@@ -39,7 +39,7 @@ class ViewController: UIViewController{
     
     // MARK: Actions
     
-    func resignKeyboard(sender: UIBarButtonItem) {
+    @objc func resignKeyboard(sender: UIBarButtonItem) {
         textField?.resignFirstResponder()
     }
     

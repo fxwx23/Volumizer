@@ -42,3 +42,4 @@ Carthage/Build
 ## Bundler
 .bundle
 vendor
+/Volumizer.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
