@@ -25,7 +25,7 @@ public enum VolumizerError: Error {
  */
 public enum VolumizerAppearanceOption {
     case overlayIsTranslucent(Bool)
-    case overlayBackgroundBlurEffectStyle(UIBlurEffectStyle)
+    case overlayBackgroundBlurEffectStyle(UIBlurEffect.Style)
     case overlayBackgroundColor(UIColor)
     case sliderProgressTintColor(UIColor)
     case sliderTrackTintColor(UIColor)
@@ -103,7 +103,7 @@ open class Volumizer: UIView {
     @discardableResult
     open class func configure(_ options: [VolumizerAppearanceOption] = []) -> Volumizer {
         let base = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.height, height: UIApplication.shared.statusBarFrame.height))
-        base.windowLevel = UIWindowLevelStatusBar + 1.0
+        base.windowLevel = UIWindow.Level.statusBar + 1.0
         
         let instance = Volumizer(options: options, base: base)
         base.addSubview(instance)
@@ -143,13 +143,13 @@ open class Volumizer: UIView {
     // MARK: Private
     
     private func setupSession(_ options: [VolumizerAppearanceOption]) {
-        do { try session.setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers) }
+        do { try session.setCategory( .playback, mode: .default, options: .mixWithOthers) }
         catch { print("Unable to set audio session category.") }
         
         do { try session.setActive(true) }
         catch  { print("Unable to initialize AVAudioSession.") }
         
-        volumeView.setVolumeThumbImage(UIImage(), for: UIControlState())
+        volumeView.setVolumeThumbImage(UIImage(), for: UIControl.State())
         volumeView.isUserInteractionEnabled = false
         volumeView.showsRouteButton = false
         addSubview(volumeView)
@@ -173,11 +173,11 @@ open class Volumizer: UIView {
         
         /// add observers.
         session.addObserver(self, forKeyPath: AVAudioSessionOutputVolumeKey, options: .new, context: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted(_:)), name: .AVAudioSessionInterruption, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChanged(_:)), name: .AVAudioSessionRouteChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationWillResignActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationDidBecomeActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted(_:)), name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChanged(_:)), name: AVAudioSession.routeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     private func update(volume value: Float, animated: Bool) {
@@ -227,7 +227,7 @@ open class Volumizer: UIView {
         guard
             let interuptionInfo = notification.userInfo,
             let rawValue = interuptionInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let interuptionType = AVAudioSessionInterruptionType(rawValue: rawValue)
+            let interuptionType = AVAudioSession.InterruptionType(rawValue: rawValue)
         else {
             return
         }
@@ -247,7 +247,7 @@ open class Volumizer: UIView {
         guard
             let interuptionInfo = notification.userInfo,
             let rawValue = interuptionInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
-            let reason = AVAudioSessionRouteChangeReason(rawValue: rawValue)
+            let reason = AVAudioSession.RouteChangeReason(rawValue: rawValue)
         else {
                 return
         }
@@ -266,7 +266,7 @@ open class Volumizer: UIView {
     }
     
     @objc private func applicationDidChangeActive(_ notification: Notification) {
-        isAppActive = notification.name == Notification.Name.UIApplicationDidBecomeActive
+        isAppActive = notification.name == UIApplication.didBecomeActiveNotification
         if isAppActive {
             update(volume: session.outputVolume, animated: false)
         }
@@ -294,7 +294,7 @@ open class Volumizer: UIView {
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let change = change, let value = change[.newKey] as? Float , keyPath == AVAudioSessionOutputVolumeKey else { return }
-        update(volume: value, animated: UIDeviceOrientationIsPortrait(UIDevice.current.orientation))
+        update(volume: value, animated: UIDevice.current.orientation.isPortrait)
     }
 }
 
