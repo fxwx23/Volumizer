@@ -14,10 +14,10 @@ Before | After | After (iPhoneX)
 
 ### Features
 
-- Swift 4
+- Swift 4.2
 - Hide the system volume HUD typically displayed on volume button presses
 - Show a simple progress bar like Instagram's iOS app does
-- Support iPhoneX
+- Support iPhoneX, XS, XS Max, XR
 - Well easy to customize appearance
 - Only support `portrait` mode
 
@@ -66,7 +66,7 @@ let options: [VolumizerAppearanceOption] = [ .overlayIsTranslucent(true),
 
 let volumizer = Volumizer.configure(options)
 
-/// To change options based on view's current appearance, call `update(options:_)` .
+/// To change options based on view's current appearance, call `change(options:_)` .
 volumizer.change(options: otherOptions)
 ```
 If you want to release `volumizer` 's window, please call `resign()`. Once you released, the system volume popup will be shown again.
