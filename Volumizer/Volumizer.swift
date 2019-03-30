@@ -25,7 +25,7 @@ public enum VolumizerError: Error {
  */
 public enum VolumizerAppearanceOption {
     case overlayIsTranslucent(Bool)
-    case overlayBackgroundBlurEffectStyle(UIBlurEffectStyle)
+    case overlayBackgroundBlurEffectStyle(UIBlurEffect.Style)
     case overlayBackgroundColor(UIColor)
     case sliderProgressTintColor(UIColor)
     case sliderTrackTintColor(UIColor)
@@ -89,11 +89,11 @@ open class Volumizer: UIView {
         
         // Progress view frame is defined based on the device model.
         // Slider view style would be like Instagram's way (of course iPhoneX too).
-        let margin: CGFloat = isPhoneX ? SafeAreaLayout.currentMargin : 0.0
-        let padding: CGFloat = isPhoneX ? (margin + 8.0) : 8.0
+        let deviceHasNotch = UIDevice.current.hasNotch
+        let marginLeft = deviceHasNotch ? (layoutMargins.left * 2) : layoutMargins.left
         let top: CGFloat = (overlay.frame.height - slider.frame.height) / 2
-        let width: CGFloat = isPhoneX ? (margin * 2 + statusBarHeight) - padding : overlay.frame.width - (padding * 2)
-        slider.frame = CGRect(x: padding, y: top, width: width, height: slider.frame.height)
+        let width: CGFloat = deviceHasNotch ? (marginLeft * 2 + statusBarHeight) - marginLeft : overlay.frame.width - (marginLeft * 2)
+        slider.frame = CGRect(x: marginLeft, y: top, width: width, height: slider.frame.height)
         slider.layer.cornerRadius = slider.bounds.height / 2
         slider.clipsToBounds = true
     }
@@ -103,7 +103,7 @@ open class Volumizer: UIView {
     @discardableResult
     open class func configure(_ options: [VolumizerAppearanceOption] = []) -> Volumizer {
         let base = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.height, height: UIApplication.shared.statusBarFrame.height))
-        base.windowLevel = UIWindowLevelStatusBar + 1.0
+        base.windowLevel = UIWindow.Level.statusBar + 1.0
         
         let instance = Volumizer(options: options, base: base)
         base.addSubview(instance)
@@ -143,13 +143,13 @@ open class Volumizer: UIView {
     // MARK: Private
     
     private func setupSession(_ options: [VolumizerAppearanceOption]) {
-        do { try session.setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers) }
+        do { try session.setCategory( .playback, mode: .default, options: .mixWithOthers) }
         catch { print("Unable to set audio session category.") }
         
         do { try session.setActive(true) }
         catch  { print("Unable to initialize AVAudioSession.") }
         
-        volumeView.setVolumeThumbImage(UIImage(), for: UIControlState())
+        volumeView.setVolumeThumbImage(UIImage(), for: UIControl.State())
         volumeView.isUserInteractionEnabled = false
         volumeView.showsRouteButton = false
         addSubview(volumeView)
@@ -173,11 +173,11 @@ open class Volumizer: UIView {
         
         /// add observers.
         session.addObserver(self, forKeyPath: AVAudioSessionOutputVolumeKey, options: .new, context: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted(_:)), name: .AVAudioSessionInterruption, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChanged(_:)), name: .AVAudioSessionRouteChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationWillResignActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: .UIApplicationDidBecomeActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted(_:)), name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChanged(_:)), name: AVAudioSession.routeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidChangeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     private func update(volume value: Float, animated: Bool) {
@@ -187,9 +187,10 @@ open class Volumizer: UIView {
         do { try setSystem(volume: value) }
         catch { print("unable to change system volume level.") }
        
-        let animationDuration = isPhoneX ? 1.0 : 2.0
-        let showRelativeDuration = isPhoneX ? 0.05 : 0.1
-        let hideRelativeDuration = isPhoneX ? 0.3 : 0.1
+        let deviceHasNotch = UIDevice.current.hasNotch
+        let animationDuration = deviceHasNotch ? 1.0 : 2.0
+        let showRelativeDuration = deviceHasNotch ? 0.05 : 0.1
+        let hideRelativeDuration = deviceHasNotch ? 0.3 : 0.1
         UIView.animateKeyframes(withDuration: animated ? animationDuration : 0, delay: 0, options: .beginFromCurrentState, animations: { () -> Void in
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: showRelativeDuration, animations: {
                 self.animateProgressView(showing: true)
@@ -214,7 +215,7 @@ open class Volumizer: UIView {
             self.base?.transform = CGAffineTransform.identity
         } else {
             self.alpha = 0.0001
-            self.base?.transform = isPhoneX ?
+            self.base?.transform = UIDevice.current.hasNotch ?
                 CGAffineTransform.identity :
                 CGAffineTransform(translationX: 0, y: -self.frame.height)
         }
@@ -226,7 +227,7 @@ open class Volumizer: UIView {
         guard
             let interuptionInfo = notification.userInfo,
             let rawValue = interuptionInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let interuptionType = AVAudioSessionInterruptionType(rawValue: rawValue)
+            let interuptionType = AVAudioSession.InterruptionType(rawValue: rawValue)
         else {
             return
         }
@@ -246,7 +247,7 @@ open class Volumizer: UIView {
         guard
             let interuptionInfo = notification.userInfo,
             let rawValue = interuptionInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
-            let reason = AVAudioSessionRouteChangeReason(rawValue: rawValue)
+            let reason = AVAudioSession.RouteChangeReason(rawValue: rawValue)
         else {
                 return
         }
@@ -265,7 +266,7 @@ open class Volumizer: UIView {
     }
     
     @objc private func applicationDidChangeActive(_ notification: Notification) {
-        isAppActive = notification.name == Notification.Name.UIApplicationDidBecomeActive
+        isAppActive = notification.name == UIApplication.didBecomeActiveNotification
         if isAppActive {
             update(volume: session.outputVolume, animated: false)
         }
@@ -293,37 +294,20 @@ open class Volumizer: UIView {
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let change = change, let value = change[.newKey] as? Float , keyPath == AVAudioSessionOutputVolumeKey else { return }
-        update(volume: value, animated: UIDeviceOrientationIsPortrait(UIDevice.current.orientation))
+        update(volume: value, animated: UIDevice.current.orientation.isPortrait)
     }
 }
 
-private let iPhoneXScreenMaxLength: CGFloat = 812.0
-private var isPhoneX: Bool {
-    let screenMaxLength = CGFloat(max(UIScreen.main.bounds.width, UIScreen.main.bounds.height))
-    return UIDevice.current.userInterfaceIdiom == .phone && screenMaxLength == iPhoneXScreenMaxLength
-}
-
-private struct SafeAreaLayout {
-    private static let portraitSafeArea: CGSize = CGSize(width: 375.0, height: 734.0)
-    private static let portraitMargin: CGFloat = 16.0
-    private static let landscapeSafeArea: CGSize = CGSize(width: 724.0, height: 375.0)
-    private static let landscapeMargin: CGFloat = 20.0
-    
-    static var currentSafeArea: CGSize {
-        switch UIApplication.shared.statusBarOrientation {
-        case .portrait, .portraitUpsideDown, .unknown:
-            return portraitSafeArea
-        default:
-            return landscapeSafeArea
+extension UIDevice {
+    fileprivate var hasNotch: Bool {
+        guard let window = UIApplication.shared.keyWindow else {
+            return false
         }
-    }
-    
-    static var currentMargin: CGFloat {
-        switch UIApplication.shared.statusBarOrientation {
-        case .portrait, .portraitUpsideDown, .unknown:
-            return portraitMargin
-        default:
-            return landscapeMargin
+        
+        if #available(iOS 11.0, *) {
+            return window.safeAreaInsets.bottom > 0.0 && UIDevice.current.userInterfaceIdiom == .phone
+        } else {
+            return false
         }
     }
 }
