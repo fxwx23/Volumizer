@@ -8,13 +8,13 @@
 
 **Volumizer** replaces the system volume popup with a simple progress bar.
 
-Before | After | After (iPhoneX)
+Before | After(No Notch) | After (With Notch)
 --- | --- | ---
 ![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/before.png) | ![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/after.png) | ![good](https://raw.githubusercontent.com/fxwx23/Volumizer/master/Screenshots/after_iphonex.png) 
 
 ### Features
 
-- Swift 4.2
+- Swift 5
 - Hide the system volume HUD typically displayed on volume button presses
 - Show a simple progress bar like Instagram's iOS app does
 - Support iPhoneX, XS, XS Max, XR
@@ -25,7 +25,7 @@ Before | After | After (iPhoneX)
 
 ##### [CocoaPods](https://cocoapods.org) 
 ```ruby
-platform :ios, '8.0'
+platform :ios, '10.0'
 use_frameworks!
 
 pod 'Volumizer'

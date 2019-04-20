@@ -225,14 +225,14 @@ open class Volumizer: UIView {
     
     @objc private func audioSessionInterrupted(_ notification: Notification) {
         guard
-            let interuptionInfo = notification.userInfo,
-            let rawValue = interuptionInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let interuptionType = AVAudioSession.InterruptionType(rawValue: rawValue)
+            let interruptionInfo = notification.userInfo,
+            let rawValue = interruptionInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let interruptionType = AVAudioSession.InterruptionType(rawValue: rawValue)
         else {
             return
         }
         
-        switch interuptionType {
+        switch interruptionType {
         case .began:
             print("Audio Session Interruption: began.")
             break
@@ -240,13 +240,15 @@ open class Volumizer: UIView {
             print("Audio Session Interruption: ended.")
             do { try session.setActive(true) }
             catch { print("Unable to initialize AVAudioSession.") }
+        @unknown default:
+            fatalError("unknown AVAudioSessio.InterruptionType is addded.")
         }
     }
     
     @objc private func audioSessionRouteChanged(_ notification: Notification) {
         guard
-            let interuptionInfo = notification.userInfo,
-            let rawValue = interuptionInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+            let interruptionInfo = notification.userInfo,
+            let rawValue = interruptionInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
             let reason = AVAudioSession.RouteChangeReason(rawValue: rawValue)
         else {
                 return

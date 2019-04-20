@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController{
+class ViewController: UIViewController {
 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var configureButton: UIButton!
@@ -53,7 +53,6 @@ class ViewController: UIViewController{
         present(alert, animated: true, completion: nil)
     }
     
-    
     @IBAction func callResignButtonTapped(_ sender: UIButton) {
         if let volumizer = volumizer {
             defer { self.volumizer = nil }
@@ -62,14 +61,11 @@ class ViewController: UIViewController{
             configureButton.setTitle("call configure()", for: .normal)
             configureButton.setTitleColor( .black, for: .normal)
             resultLabel.text = "Before"
-        }
-        else {
+        } else {
             volumizer = Volumizer.configure(defaultOptions)
             configureButton.setTitle("call resign()", for: .normal)
             configureButton.setTitleColor( .red, for: .normal)
             resultLabel.text = "After"
         }
     }
-    
 }
-
