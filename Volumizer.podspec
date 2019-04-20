@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'Volumizer'
-  s.version  = '1.1.1'
+  s.version  = '1.1.2'
   s.platform = :ios, "10.0"
   s.license  = { :type => "MIT", :file => "license" }
   s.summary  = 'Volumizer replaces the system volume popup with a simple progress bar.'
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.description  = <<-DESC
                      -Volumizer replaces the system volume popup with a simple progress bar.
                      -Features
-                     -1. Swift4.2
+                     -1. Swift5
                      -2. Hide the system volume HUD typically displayed on volume button presses
                      -3. Show a simple progress bar like Instagram's iOS app does
                      -4. Well easy to customize appearance
